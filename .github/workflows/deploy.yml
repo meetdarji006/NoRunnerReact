@@ -3,7 +3,7 @@ name: Deploy React App to EC2 with Nginx
 on:
   push:
     branches:
-      - main
+      - main  # change this if your default branch is different
 
 jobs:
   deploy:
@@ -19,10 +19,10 @@ jobs:
     - name: Build React app
       run: npm run build
 
-    - name: Set up SSH
+    - name: Set up SSH (Base64-decoded key)
       run: |
         mkdir -p ~/.ssh
-        echo ${{ secrets.EC2_SSH_KEY }} > ~/.ssh/id_rsa
+        echo "${{ secrets.EC2_SSH_KEY_B64 }}" | base64 -d > ~/.ssh/id_rsa
         chmod 600 ~/.ssh/id_rsa
         ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
 
